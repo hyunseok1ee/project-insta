@@ -1,0 +1,99 @@
+{
+  "data": [
+    {
+      "author": {
+        "instaChannel": "Milo",
+        "instaUsername": "@milo.trails",
+        "profilePic": "https://randomuser.me/api/portraits/men/32.jpg",
+        "userSince": "2021-04-18"
+      },
+      "image": {
+        "imageTitle": "Fox in the Grass",
+        "dateTaken": "2026-03-24",
+        "thumbnail": "https://randomfox.ca/images/6.jpg",
+        "fullsizeSource": "https://randomfox.ca/images/6.jpg",
+        "alt": "A fox sitting in tall grass"
+      },
+      "post": {
+        "timePosted": "2 hours ago",
+        "instaCaption": "Caught this little fox relaxing in the grass."
+      }
+    },
+    {
+      "author": {
+        "instaChannel": "Nora",
+        "instaUsername": "@nora.snaps",
+        "profilePic": "https://randomuser.me/api/portraits/women/44.jpg",
+        "userSince": "2020-09-11"
+      },
+      "image": {
+        "imageTitle": "Snowy Fox",
+        "dateTaken": "2026-03-21",
+        "thumbnail": "https://randomfox.ca/images/7.jpg",
+        "fullsizeSource": "https://randomfox.ca/images/7.jpg",
+        "alt": "A fox in a snowy area"
+      },
+      "post": {
+        "timePosted": "5 hours ago",
+        "instaCaption": "This one looks straight out of winter storybook."
+      }
+    },
+    {
+      "author": {
+        "instaChannel": "Jasper",
+        "instaUsername": "@jasper.outdoors",
+        "profilePic": "https://randomuser.me/api/portraits/men/51.jpg",
+        "userSince": "2019-06-03"
+      },
+      "image": {
+        "imageTitle": "Curious Fox",
+        "dateTaken": "2026-03-20",
+        "thumbnail": "https://randomfox.ca/images/8.jpg",
+        "fullsizeSource": "https://randomfox.ca/images/8.jpg",
+        "alt": "A curious fox looking toward the camera"
+      },
+      "post": {
+        "timePosted": "1 day ago",
+        "instaCaption": "He really looked like he was about to ask a question."
+      }
+    },
+    {
+      "author": {
+        "instaChannel": "Lena",
+        "instaUsername": "@lena.frames",
+        "profilePic": "https://randomuser.me/api/portraits/women/29.jpg",
+        "userSince": "2022-01-27"
+      },
+      "image": {
+        "imageTitle": "Forest Watcher",
+        "dateTaken": "2026-03-19",
+        "thumbnail": "https://randomfox.ca/images/9.jpg",
+        "fullsizeSource": "https://randomfox.ca/images/9.jpg",
+        "alt": "A fox standing alert in the forest"
+      },
+      "post": {
+        "timePosted": "2 days ago",
+        "instaCaption": "This fox was so still for a second. Super photogenic."
+      }
+    },
+    {
+      "author": {
+        "instaChannel": "Theo",
+        "instaUsername": "@theo.roams",
+        "profilePic": "https://randomuser.me/api/portraits/men/67.jpg",
+        "userSince": "2018-11-09"
+      },
+      "image": {
+        "imageTitle": "Golden Fox",
+        "dateTaken": "2026-03-18",
+        "thumbnail": "https://randomfox.ca/images/10.jpg",
+        "fullsizeSource": "https://randomfox.ca/images/10.jpg",
+        "alt": "A golden fox in warm sunlight"
+      },
+      "post": {
+        "timePosted": "3 days ago",
+        "instaCaption": "The lighting here was actually unreal."
+      }
+    }
+  ]
+}
