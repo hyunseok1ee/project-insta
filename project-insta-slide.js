@@ -5,85 +5,161 @@ export class ProjectInstaSlide extends LitElement {
     return "project-insta-slide";
   }
 
-  constructor() {
-    super();
-    this.topHeading = "Username";
-    this.secondHeading = "3 hours ago";
-    this.foxImg = "";
-  }
-
   static get properties() {
     return {
-      topHeading: { type: String, attribute: "top-heading" },
-      secondHeading: { type: String, attribute: "second-heading" },
-      foxImg: { type: String },
+      instaChannel: { type: String, attribute: "insta-channel" },
+      instaUsername: { type: String, attribute: "insta-username" },
+      profilePic: { type: String, attribute: "profile-pic" },
+      userSince: { type: String, attribute: "user-since" },
+      image: { type: String },
+      instaCaption: { type: String, attribute: "insta-caption" },
+      dateTaken: { type: String, attribute: "date-taken" },
+      liked: { type: Boolean }
     };
+  }
+
+  constructor() {
+    super();
+    this.instaChannel = "";
+    this.instaUsername = "";
+    this.profilePic = "";
+    this.userSince = "";
+    this.image = "";
+    this.instaCaption = "";
+    this.dateTaken = "";
+    this.liked = false;
   }
 
   static get styles() {
     return css`
       :host {
         display: block;
+      }
+
+      .card {
+        width: 100%;
         background: white;
-        color: black;
+        border-radius: 16px;
+        padding: 12px;
+        box-sizing: border-box;
+        color: #000;
       }
 
       .header {
-        padding: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      .profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+
+      .author-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .channel-name {
         font-weight: bold;
+        font-size: 14px;
+        color: #000;
       }
 
-      .time {
-        font-size: 12px;
-        color: gray;
+      .username {
+        font-size: 13px;
+        color: #555;
       }
 
-      .image-wrap {
+      .member-since {
+        font-size: 11px;
+        color: #888;
+      }
+
+      .image {
         width: 100%;
-        background: #ddd;
-      }
-
-      img {
-        width: 100%;
-        max-height: 650px;
+        margin: 10px 0;
+        border-radius: 10px;
         display: block;
-        object-fit: contain;
+      }
+
+      .like-row {
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 8px;
+      }
+
+      .like-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
       }
 
       .caption {
-        padding: 12px;
+        font-size: 14px;
+        color: #000;
+        margin-bottom: 4px;
+      }
+
+      .date {
+        font-size: 12px;
+        color: #888;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .card {
+          background: #1e1e1e;
+          color: #fff;
+        }
+        .channel-name { color: #fff; }
+        .username { color: #aaa; }
+        .caption { color: #fff; }
       }
     `;
   }
 
-  getFoxes() {
-    fetch("https://randomfox.ca/floof/")
-      .then((resp) => resp.json())
-      .then((data) => {
-        this.foxImg = data.image;
-      });
-  }
-
-  firstUpdated() {
-    this.getFoxes();
+  handleLikeClick() {
+    this.dispatchEvent(
+      new CustomEvent("toggle-like", {
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   render() {
     return html`
-      <div class="header">
-        <div>${this.topHeading}</div>
-        <div class="time">${this.secondHeading}</div>
-      </div>
+      <div class="card">
+        <div class="header">
+          <img class="profile-pic" src="${this.profilePic}" alt="${this.instaChannel}" />
+          <div class="author-info">
+            <span class="channel-name">${this.instaChannel}</span>
+            <span class="username">${this.instaUsername}</span>
+            <span class="member-since">Member since ${this.userSince}</span>
+          </div>
+        </div>
 
-      <div class="image-wrap">
-        ${this.foxImg ? html`<img src="${this.foxImg}" alt="Fox image" />` : html``}
-      </div>
+        <img class="image" src="${this.image}" alt="${this.instaCaption}" />
 
-      <div class="caption">
-        <slot></slot>
+        <div class="like-row">
+          <button class="like-btn" @click=${this.handleLikeClick}>
+            ${this.liked ? "❤️" : "🤍"}
+          </button>
+        </div>
+
+        <div class="caption">${this.instaCaption}</div>
+        <div class="date">${this.dateTaken}</div>
       </div>
     `;
   }
 }
 
-globalThis.customElements.define(ProjectInstaSlide.tag, ProjectInstaSlide);
+customElements.define(ProjectInstaSlide.tag, ProjectInstaSlide);
