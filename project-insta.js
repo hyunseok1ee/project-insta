@@ -78,7 +78,8 @@ export class ProjectInsta extends DDDSuper(I18NMixin(LitElement)) {
   }
 
   async firstUpdated() {
-    const response = await fetch("./project-insta.json");
+    const url = new URL("./project-insta.json", import.meta.url).href;
+    const response = await fetch(url);
     const json = await response.json();
 
     this.data = json.data;
