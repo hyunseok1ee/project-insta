@@ -1,8 +1,8 @@
 import { LitElement, html, css } from "lit";
 
-export class PlayListDots extends LitElement {
+export class ProjectInstaDots extends LitElement {
   static get tag() {
-    return "play-list-dots";
+    return "project-insta-dots";
   }
 
   static get properties() {
@@ -14,7 +14,7 @@ export class PlayListDots extends LitElement {
 
   constructor() {
     super();
-    this.count = 4;
+    this.count = 0;
     this.active = 0;
   }
 
@@ -23,37 +23,46 @@ export class PlayListDots extends LitElement {
       :host {
         display: inline-flex;
         align-items: center;
-        gap: var(--ddd-spacing-2);
+        gap: 8px;
       }
 
       .dot {
         width: 12px;
         height: 12px;
         border-radius: 50%;
-        background-color: var(--ddd-theme-default-white);
-        border: 2px solid var(--ddd-theme-default-white);
-        opacity: 0.7;
+        background-color: #d9d9d9;
+        border: none;
+        cursor: pointer;
+        padding: 0;
       }
 
       .dot.active {
-        background-color: var(--ddd-theme-default-skyBlue);
-        border-color: var(--ddd-theme-default-skyBlue);
-        opacity: 1;
+        background-color: #3b82f6;
       }
     `;
   }
 
+  dotClick(i) {
+    this.dispatchEvent(
+      new CustomEvent("dot-clicked", {
+        bubbles: true,
+        composed: true,
+        detail: { index: i },
+      })
+    );
+  }
+
   render() {
-    const dots = [];
-
-    for (let i = 0; i < this.count; i++) {
-      dots.push(html`
-        <span class="dot ${i === this.active ? "active" : ""}"></span>
-      `);
-    }
-
-    return html`${dots}`;
+    return html`
+      ${Array.from({ length: this.count }, (_, i) => html`
+        <button
+          class="dot ${i === this.active ? "active" : ""}"
+          @click=${() => this.dotClick(i)}
+          aria-label="Go to slide ${i + 1}"
+        ></button>
+      `)}
+    `;
   }
 }
 
-globalThis.customElements.define(PlayListDots.tag, PlayListDots);
+globalThis.customElements.define(ProjectInstaDots.tag, ProjectInstaDots);
