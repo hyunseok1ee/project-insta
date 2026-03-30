@@ -1,83 +1,81 @@
-/**
- * Copyright 2026 Hyunseok Lee
- * @license Apache-2.0, see LICENSE for full text.
- */
 import { LitElement, html, css } from "lit";
-import { DDDSuper } from "@haxtheweb/d-d-d/d-d-d.js";
-import { I18NMixin } from "@haxtheweb/i18n-manager/lib/I18NMixin.js";
 
-/**
- * `project-insta`
- * 
- * @demo index.html
- * @element project-insta
- */
-export class ProjectInsta extends DDDSuper(I18NMixin(LitElement)) {
-
+export class PlayListNav extends LitElement {
   static get tag() {
-    return "project-insta";
+    return "play-list-nav";
+  }
+
+  static get properties() {
+    return {
+      direction: { type: String, reflect: true },
+      disabled: { type: Boolean, reflect: true },
+    };
   }
 
   constructor() {
     super();
-    this.title = "";
-    this.t = this.t || {};
-    this.t = {
-      ...this.t,
-      title: "Title",
-    };
-    this.registerLocalization({
-      context: this,
-      localesPath:
-        new URL("./locales/project-insta.ar.json", import.meta.url).href +
-        "/../",
-    });
+    this.direction = "next";
+    this.disabled = false;
   }
 
-  // Lit reactive properties
-  static get properties() {
-    return {
-      ...super.properties,
-      title: { type: String },
-    };
-  }
-
-  // Lit scoped styles
   static get styles() {
-    return [super.styles,
-    css`
+    return css`
       :host {
-        display: block;
-        color: var(--ddd-theme-primary);
-        background-color: var(--ddd-theme-accent);
-        font-family: var(--ddd-font-navigation);
+        display: inline-block;
       }
-      .wrapper {
-        margin: var(--ddd-spacing-2);
-        padding: var(--ddd-spacing-4);
+
+      button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        border: 3px solid var(--ddd-theme-default-beaverBlue);
+        border-radius: 50%;
+        background-color: var(--ddd-theme-default-white);
+        color: var(--ddd-theme-default-beaverBlue);
+        cursor: pointer;
+        font-size: var(--ddd-font-size-2xl);
+        font-weight: var(--ddd-font-weight-bold);
+        line-height: 1;
+        padding: 0;
       }
-      h3 span {
-        font-size: var(--project-insta-label-font-size, var(--ddd-font-size-s));
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
-    `];
+    `;
   }
 
-  // Lit render the HTML
+  handleClick() {
+    if (this.disabled) {
+      return;
+    }
+
+    this.dispatchEvent(
+      new CustomEvent("nav-click", {
+        detail: { direction: this.direction },
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
   render() {
-    return html`
-<div class="wrapper">
-  <h3><span>${this.t.title}:</span> ${this.title}</h3>
-  <slot></slot>
-</div>`;
-  }
+    const isPrev = this.direction === "previous" || this.direction === "prev";
 
-  /**
-   * haxProperties integration via file reference
-   */
-  static get haxProperties() {
-    return new URL(`./lib/${this.tag}.haxProperties.json`, import.meta.url)
-      .href;
+    return html`
+      <button
+        type="button"
+        ?disabled=${this.disabled}
+        aria-label=${isPrev ? "Previous" : "Next"}
+        @click=${this.handleClick}
+      >
+        ${isPrev ? "‹" : "›"}
+      </button>
+    `;
   }
 }
 
-globalThis.customElements.define(ProjectInsta.tag, ProjectInsta);
+globalThis.customElements.define(PlayListNav.tag, PlayListNav);
