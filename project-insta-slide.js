@@ -1,12 +1,15 @@
 import { LitElement, html, css } from "lit";
+import { DDDSuper } from "@haxtheweb/d-d-d/d-d-d.js";
+import { I18NMixin } from "@haxtheweb/i18n-manager/lib/I18NMixin.js";
 
-export class ProjectInstaSlide extends LitElement {
+export class ProjectInstaSlide extends DDDSuper(I18NMixin(LitElement)) {
   static get tag() {
     return "project-insta-slide";
   }
 
   static get properties() {
     return {
+      ...super.properties,
       instaChannel: { type: String, attribute: "insta-channel" },
       instaUsername: { type: String, attribute: "insta-username" },
       profilePic: { type: String, attribute: "profile-pic" },
@@ -14,7 +17,8 @@ export class ProjectInstaSlide extends LitElement {
       image: { type: String },
       instaCaption: { type: String, attribute: "insta-caption" },
       dateTaken: { type: String, attribute: "date-taken" },
-      liked: { type: Boolean }
+      liked: { type: Boolean },
+      _copied: { type: Boolean, state: true },
     };
   }
 
@@ -28,102 +32,144 @@ export class ProjectInstaSlide extends LitElement {
     this.instaCaption = "";
     this.dateTaken = "";
     this.liked = false;
+    this._copied = false;
   }
 
   static get styles() {
-    return css`
-      :host {
-        display: block;
-      }
-
-      .card {
-        width: 100%;
-        background: white;
-        border-radius: 16px;
-        padding: 12px;
-        box-sizing: border-box;
-        color: #000;
-      }
-
-      .header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 8px;
-      }
-
-      .profile-pic {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-        flex-shrink: 0;
-      }
-
-      .author-info {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-      }
-
-      .channel-name {
-        font-weight: bold;
-        font-size: 14px;
-        color: #000;
-      }
-
-      .username {
-        font-size: 13px;
-        color: #555;
-      }
-
-      .member-since {
-        font-size: 11px;
-        color: #888;
-      }
-
-      .image {
-        width: 100%;
-        margin: 10px 0;
-        border-radius: 10px;
-        display: block;
-      }
-
-      .like-row {
-        display: flex;
-        justify-content: flex-start;
-        margin-bottom: 8px;
-      }
-
-      .like-btn {
-        background: none;
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-        padding: 0;
-      }
-
-      .caption {
-        font-size: 14px;
-        color: #000;
-        margin-bottom: 4px;
-      }
-
-      .date {
-        font-size: 12px;
-        color: #888;
-      }
-
-      @media (prefers-color-scheme: dark) {
-        .card {
-          background: #1e1e1e;
-          color: #fff;
+    return [
+      super.styles,
+      css`
+        :host {
+          display: block;
         }
-        .channel-name { color: #fff; }
-        .username { color: #aaa; }
-        .caption { color: #fff; }
-      }
-    `;
+
+        .card {
+          width: 100%;
+          background: light-dark(white, var(--ddd-theme-default-nittanyNavy));
+          border-radius: var(--ddd-radius-lg);
+          padding: var(--ddd-spacing-3);
+          box-sizing: border-box;
+          color: light-dark(var(--ddd-theme-default-nittanyNavy), white);
+        }
+
+        .header {
+          display: flex;
+          align-items: center;
+          gap: var(--ddd-spacing-3);
+          margin-bottom: var(--ddd-spacing-2);
+        }
+
+        .profile-pic {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          object-fit: cover;
+          flex-shrink: 0;
+        }
+
+        .author-info {
+          display: flex;
+          flex-direction: column;
+          gap: var(--ddd-spacing-1);
+        }
+
+        .channel-name {
+          font-weight: var(--ddd-font-weight-bold);
+          font-size: var(--ddd-font-size-3xs);
+          color: light-dark(var(--ddd-theme-default-nittanyNavy), white);
+        }
+
+        .username {
+          font-size: var(--ddd-font-size-3xs);
+          color: var(--ddd-theme-default-skyBlue);
+        }
+
+        .member-since {
+          font-size: var(--ddd-font-size-4xs);
+          color: var(--ddd-theme-default-limestoneGray);
+        }
+
+        .image-wrapper {
+          width: 100%;
+          aspect-ratio: 4 / 3;
+          overflow: hidden;
+          border-radius: var(--ddd-radius-md);
+          margin: var(--ddd-spacing-2) 0;
+          background-color: light-dark(var(--ddd-theme-default-limestoneLight), var(--ddd-theme-default-potentialMidnight));
+        }
+
+        .image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .action-row {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          gap: var(--ddd-spacing-1);
+          margin-bottom: var(--ddd-spacing-2);
+        }
+
+        .like-btn {
+          background: none;
+          border: none;
+          font-size: var(--ddd-font-size-s);
+          cursor: pointer;
+          padding: var(--ddd-spacing-1);
+        }
+
+        .share-btn {
+          display: flex;
+          align-items: center;
+          gap: var(--ddd-spacing-1);
+          background: none;
+          border: none;
+          padding: var(--ddd-spacing-1);
+          font-size: var(--ddd-font-size-4xs);
+          cursor: pointer;
+          color: light-dark(var(--ddd-theme-default-limestoneGray), var(--ddd-theme-default-limestoneLight));
+          transition: color 0.2s;
+        }
+
+        .share-btn:hover {
+          color: light-dark(var(--ddd-theme-default-nittanyNavy), white);
+        }
+
+        .share-btn.copied {
+          color: var(--ddd-theme-default-opportunityGreen);
+        }
+
+        .share-icon {
+          width: 16px;
+          height: 16px;
+          fill: currentColor;
+        }
+
+        .caption {
+          font-size: var(--ddd-font-size-3xs);
+          color: light-dark(var(--ddd-theme-default-nittanyNavy), white);
+          margin-bottom: var(--ddd-spacing-1);
+        }
+
+        .date {
+          font-size: var(--ddd-font-size-4xs);
+          color: var(--ddd-theme-default-limestoneGray);
+        }
+
+        @media (max-width: 480px) {
+          .card {
+            border-radius: var(--ddd-radius-md);
+          }
+        }
+      `,
+    ];
+  }
+
+  static get haxProperties() {
+    return new URL(`./lib/${this.tag}.haxProperties.json`, import.meta.url).href;
   }
 
   handleLikeClick() {
@@ -133,6 +179,15 @@ export class ProjectInstaSlide extends LitElement {
         composed: true,
       })
     );
+  }
+
+  async handleShare() {
+    const url = window.location.href;
+    await navigator.clipboard.writeText(url);
+    this._copied = true;
+    setTimeout(() => {
+      this._copied = false;
+    }, 2000);
   }
 
   render() {
@@ -147,11 +202,24 @@ export class ProjectInstaSlide extends LitElement {
           </div>
         </div>
 
-        <img class="image" src="${this.image}" alt="${this.instaCaption}" />
+        <div class="image-wrapper">
+          <img class="image" src="${this.image}" alt="${this.instaCaption}" loading="lazy" />
+        </div>
 
-        <div class="like-row">
-          <button class="like-btn" @click=${this.handleLikeClick}>
+        <div class="action-row">
+          <button class="like-btn" aria-label=${this.liked ? "Unlike this post" : "Like this post"} @click=${this.handleLikeClick}>
             ${this.liked ? "❤️" : "🤍"}
+          </button>
+
+          <button
+            class="share-btn ${this._copied ? "copied" : ""}"
+            aria-label="Share this post"
+            @click=${this.handleShare}
+          >
+            <svg class="share-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0 0 18 8a3 3 0 1 0-3-3c0 .24.04.47.09.7L8.04 9.81A3 3 0 0 0 6 9a3 3 0 1 0 3 3c0-.24-.04-.47-.09-.7l7.05-4.11c.52.47 1.2.77 1.96.77a3 3 0 1 0 0-6z"/>
+            </svg>
+            ${this._copied ? "Copied!" : "Share"}
           </button>
         </div>
 
@@ -162,4 +230,4 @@ export class ProjectInstaSlide extends LitElement {
   }
 }
 
-customElements.define(ProjectInstaSlide.tag, ProjectInstaSlide);
+globalThis.customElements.define(ProjectInstaSlide.tag, ProjectInstaSlide);

@@ -1,12 +1,15 @@
 import { LitElement, html, css } from "lit";
+import { DDDSuper } from "@haxtheweb/d-d-d/d-d-d.js";
+import { I18NMixin } from "@haxtheweb/i18n-manager/lib/I18NMixin.js";
 
-export class ProjectInstaDots extends LitElement {
+export class ProjectInstaDots extends DDDSuper(I18NMixin(LitElement)) {
   static get tag() {
     return "project-insta-dots";
   }
 
   static get properties() {
     return {
+      ...super.properties,
       count: { type: Number },
       active: { type: Number },
     };
@@ -19,27 +22,30 @@ export class ProjectInstaDots extends LitElement {
   }
 
   static get styles() {
-    return css`
-      :host {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-      }
+    return [
+      super.styles,
+      css`
+        :host {
+          display: inline-flex;
+          align-items: center;
+          gap: var(--ddd-spacing-2);
+        }
 
-      .dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background-color: #d9d9d9;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-      }
+        .dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background-color: var(--ddd-theme-default-limestoneLight);
+          border: none;
+          cursor: pointer;
+          padding: var(--ddd-spacing-0);
+        }
 
-      .dot.active {
-        background-color: #3b82f6;
-      }
-    `;
+        .dot.active {
+          background-color: var(--ddd-theme-default-skyBlue);
+        }
+      `,
+    ];
   }
 
   dotClick(i) {

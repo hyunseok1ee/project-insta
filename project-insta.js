@@ -17,12 +17,11 @@ export class ProjectInsta extends DDDSuper(I18NMixin(LitElement)) {
   constructor() {
     super();
     this.title = "";
-    this.t = {
-      title: "Title",
-    };
+    this.t = this.t || {};
+    this.t = { ...this.t, title: "Title" };
 
     this.data = [];
-    this.index = 0;
+    this._index = 0;
     this.slideCount = 0;
     this.likes = [];
   }
@@ -38,24 +37,43 @@ export class ProjectInsta extends DDDSuper(I18NMixin(LitElement)) {
     };
   }
 
+  // index getter/setter — URL 동기화
+  get index() {
+    return this._index;
+  }
+
+  set index(val) {
+    const old = this._index;
+    this._index = val;
+    this.requestUpdate("index", old);
+
+    // URL에 activeIndex 반영
+    const url = new URL(window.location.href);
+    url.searchParams.set("activeIndex", val);
+    window.history.replaceState({}, "", url.toString());
+  }
+
   static get styles() {
     return [
       super.styles,
       css`
         :host {
           display: block;
+          color-scheme: light dark;
+          font-family: var(--ddd-font-navigation);
           width: 100%;
           max-width: 620px;
-          margin: 40px auto;
-          background-color: white;
-          border-radius: 12px;
+          margin: var(--ddd-spacing-10) auto;
+          background-color: light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-nittanyNavy));
+          color: light-dark(var(--ddd-theme-default-nittanyNavy), white);
+          border-radius: var(--ddd-radius-md);
           overflow: hidden;
           box-shadow: var(--ddd-boxShadow-sm);
         }
 
         .wrapper {
           width: 100%;
-          padding: 16px;
+          padding: var(--ddd-spacing-4);
           box-sizing: border-box;
         }
 
@@ -63,14 +81,14 @@ export class ProjectInsta extends DDDSuper(I18NMixin(LitElement)) {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          gap: 12px;
-          margin-bottom: 16px;
+          gap: var(--ddd-spacing-3);
+          margin-bottom: var(--ddd-spacing-4);
         }
 
-        @media (prefers-color-scheme: dark) {
+        @media (max-width: 480px) {
           :host {
-            background-color: #111;
-            color: white;
+            margin: var(--ddd-spacing-4) auto;
+            border-radius: var(--ddd-radius-sm);
           }
         }
       `,
@@ -84,11 +102,18 @@ export class ProjectInsta extends DDDSuper(I18NMixin(LitElement)) {
 
     this.data = json.data;
     this.slideCount = this.data.length;
-    this.index = 0;
+
+    const params = new URLSearchParams(window.location.search);
+    const urlIndex = parseInt(params.get("activeIndex"));
+    const startIndex = (!isNaN(urlIndex) && urlIndex >= 0 && urlIndex < this.slideCount)
+      ? urlIndex
+      : 0;
 
     this.likes = this.data.map((_, i) => {
       return localStorage.getItem("liked_" + i) === "true";
     });
+
+    this.index = startIndex;
   }
 
   toggleLike(i) {
@@ -164,6 +189,10 @@ export class ProjectInsta extends DDDSuper(I18NMixin(LitElement)) {
         ></project-insta-slide>
       </div>
     `;
+  }
+
+  static get haxProperties() {
+    return new URL(`./lib/${this.tag}.haxProperties.json`, import.meta.url).href;
   }
 }
 
