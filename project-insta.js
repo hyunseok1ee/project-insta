@@ -37,7 +37,6 @@ export class ProjectInsta extends DDDSuper(I18NMixin(LitElement)) {
     };
   }
 
-  // index getter/setter — URL 동기화
   get index() {
     return this._index;
   }
@@ -47,7 +46,6 @@ export class ProjectInsta extends DDDSuper(I18NMixin(LitElement)) {
     this._index = val;
     this.requestUpdate("index", old);
 
-    // URL에 activeIndex 반영
     const url = new URL(window.location.href);
     url.searchParams.set("activeIndex", val);
     window.history.replaceState({}, "", url.toString());
